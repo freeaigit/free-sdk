@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+free_dot_ai.egg-info/PKG-INFO
+free_dot_ai.egg-info/SOURCES.txt
+free_dot_ai.egg-info/dependency_links.txt
+free_dot_ai.egg-info/requires.txt
+free_dot_ai.egg-info/top_level.txt
+freeai/__init__.py
+freeai/client.py
+freeai/exceptions.py
+freeai/models.py
