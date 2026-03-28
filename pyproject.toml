@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "free-dot-ai"
-version = "0.1.0"
+version = "0.2.0"
 description = "Free.ai Python SDK — access 400+ AI tools from your code"
 readme = "README.md"
 license = {text = "MIT"}
@@ -27,6 +27,9 @@ classifiers = [
 dependencies = [
     "requests>=2.28.0",
 ]
+
+[project.optional-dependencies]
+async = ["httpx>=0.24.0"]
 
 [project.urls]
 Homepage = "https://free.ai"

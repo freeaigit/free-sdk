@@ -181,3 +181,46 @@ class VideoResponse:
             usage=Usage.from_dict(data.get("free_ai_usage", {})),
             raw=data,
         )
+
+
+@dataclass
+class ChatStreamChunk:
+    """A single chunk from a streaming chat response."""
+    text: str = ""
+    model: str = ""
+    done: bool = False
+    raw: Dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_sse(cls, data: dict) -> "ChatStreamChunk":
+        text = ""
+        done = False
+        choices = data.get("choices", [])
+        if choices:
+            delta = choices[0].get("delta", {})
+            text = delta.get("content", "")
+            done = choices[0].get("finish_reason") is not None
+        return cls(
+            text=text,
+            model=data.get("model", ""),
+            done=done,
+            raw=data,
+        )
+
+
+@dataclass
+class OCRResponse:
+    """Response from an OCR request."""
+    text: str
+    pages: List[Dict[str, Any]] = field(default_factory=list)
+    usage: Usage = field(default_factory=Usage)
+    raw: Dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "OCRResponse":
+        return cls(
+            text=data.get("text", ""),
+            pages=data.get("pages", []),
+            usage=Usage.from_dict(data.get("free_ai_usage", {})),
+            raw=data,
+        )
