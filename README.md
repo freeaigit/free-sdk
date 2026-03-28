@@ -1,0 +1,176 @@
+# Free.ai Python SDK
+
+Access 400+ AI tools from your Python code. Chat, image generation, text to speech, translation, video, music, and more.
+
+**[Website](https://free.ai)** | **[API Docs](https://free.ai/api/)** | **[PyPI](https://pypi.org/project/freeai/)** | **[CLI Tool](https://github.com/freeaigit/free-code)**
+
+## Install
+
+```bash
+pip install freeai
+```
+
+## Quick Start
+
+```python
+from freeai import FreeAI
+
+ai = FreeAI(api_key="sk-free-xxx")  # or FreeAI() for anonymous
+
+# Chat
+response = ai.chat("What is Python?")
+print(response.text)
+
+# Chat with a specific model
+response = ai.chat("Explain quantum computing", model="openai/gpt-4o")
+print(response.text)
+
+# Image generation
+image = ai.image("A sunset over mountains")
+image.save("sunset.png")
+
+# Text to speech
+audio = ai.tts("Hello world", voice="af_heart")
+audio.save("hello.mp3")
+
+# Translation
+result = ai.translate("Hello", to="es")
+print(result.text)  # "Hola"
+
+# Speech to text
+transcript = ai.stt(url="https://example.com/audio.mp3")
+print(transcript.text)
+
+# Music generation
+music = ai.music("Upbeat jazz piano")
+music.save("jazz.mp3")
+
+# Video generation
+video = ai.video("A cat walking through a garden")
+video.save("cat.mp4")
+```
+
+## BYOK (Bring Your Own Key)
+
+Use your own API keys from any provider. Zero markup.
+
+```python
+# OpenAI
+ai = FreeAI(provider="openai", api_key="sk-proj-xxx")
+response = ai.chat("Hello", model="gpt-4o")
+
+# Anthropic
+ai = FreeAI(provider="anthropic", api_key="sk-ant-xxx")
+response = ai.chat("Hello", model="claude-sonnet-4")
+
+# Google
+ai = FreeAI(provider="google", api_key="AIzaSyxxx")
+response = ai.chat("Hello", model="gemini-2.5-pro")
+
+# OpenRouter (346+ models)
+ai = FreeAI(provider="openrouter", api_key="sk-or-xxx")
+response = ai.chat("Hello", model="meta-llama/llama-3.3-70b")
+```
+
+Or via environment variables:
+
+```bash
+export FREEAI_API_KEY=sk-proj-xxx
+export FREEAI_PROVIDER=openai
+```
+
+```python
+ai = FreeAI()  # picks up env vars automatically
+```
+
+## All Methods
+
+| Method | Description | Returns |
+|--------|-------------|---------|
+| `ai.chat(message, model=...)` | Chat with any LLM | `ChatResponse` |
+| `ai.image(prompt, model=...)` | Generate an image | `ImageResponse` |
+| `ai.tts(text, voice=..., model=...)` | Text to speech | `TTSResponse` |
+| `ai.stt(url=..., model=...)` | Speech to text | `STTResponse` |
+| `ai.translate(text, to=...)` | Translate text | `TranslateResponse` |
+| `ai.music(prompt, duration=...)` | Generate music | `MusicResponse` |
+| `ai.video(prompt, model=...)` | Generate video | `VideoResponse` |
+| `ai.enhance_image(url, scale=2)` | Upscale image 2x/4x | `ImageResponse` |
+| `ai.remove_background(url)` | Remove image background | `ImageResponse` |
+| `ai.models()` | List available models | `list` |
+| `ai.health()` | API health check | `dict` |
+
+## Response Objects
+
+Every response has:
+- Typed attributes (`.text`, `.url`, etc.)
+- `.usage` — token usage info (`.tokens_used`, `.tokens_charged`, `.source`, `.model`)
+- `.raw` — the full JSON response dict
+
+Media responses (image, tts, music, video) have a `.save(path)` method to download the file.
+
+## Models
+
+### Self-Hosted (cheapest)
+
+| Model | Type | ID |
+|-------|------|----|
+| Qwen 2.5 7B | Chat | `qwen7b` |
+| Qwen 2.5 Coder 32B | Code | `qwen-coder-32b` |
+| FLUX.1 Schnell | Image | `flux-schnell` |
+| Kokoro | TTS | `kokoro` |
+| faster-whisper | STT | `whisper` |
+| MadLAD-400 | Translation | `madlad400` |
+| AudioLDM 2 | Music | `audioldm2` |
+| CogVideoX | Video | `cogvideox` |
+
+### OpenRouter (346+ models)
+
+Use the `provider/model` format:
+
+```python
+ai.chat("Hello", model="openai/gpt-4o")
+ai.chat("Hello", model="anthropic/claude-sonnet-4")
+ai.chat("Hello", model="google/gemini-2.5-pro")
+ai.chat("Hello", model="meta-llama/llama-3.3-70b")
+ai.chat("Hello", model="deepseek/deepseek-chat-v3")
+```
+
+Full list: [free.ai/apps/](https://free.ai/apps/) or `ai.models()`
+
+## Pricing
+
+- **Anonymous**: Daily free limits (no API key needed)
+- **Free account**: 50K tokens/day ([sign up](https://free.ai/signup/))
+- **Paid plans**: From $5/month ([pricing](https://free.ai/pricing/))
+- **BYOK**: $0 — your key, your bill, zero markup
+
+## Error Handling
+
+```python
+from freeai import FreeAI, AuthenticationError, RateLimitError, InsufficientCreditsError
+
+ai = FreeAI(api_key="sk-free-xxx")
+
+try:
+    response = ai.chat("Hello")
+except AuthenticationError:
+    print("Bad API key")
+except InsufficientCreditsError:
+    print("Out of tokens — buy more at free.ai/pricing/")
+except RateLimitError:
+    print("Too many requests — slow down")
+```
+
+## Free.ai Ecosystem
+
+- **[Free.ai](https://free.ai)** — 400+ free AI tools on the web
+- **[Python SDK](https://github.com/freeaigit/free-sdk)** — `pip install freeai` (you are here)
+- **[CLI Coder](https://github.com/freeaigit/free-code)** — `pip install freeai-code` — AI coding in your terminal
+- **[iOS App](https://github.com/nadermx/free-ios)** — Native iPhone/iPad app
+- **[Android App](https://github.com/nadermx/free-android)** — Native Android app
+- **[API Docs](https://free.ai/api/)** — Full API reference
+- **[Web IDE](https://free.ai/coder/)** — Code in your browser
+
+## License
+
+MIT
